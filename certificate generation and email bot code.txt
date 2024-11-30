@@ -1,0 +1,48 @@
+Full text export.
+
+1: Folder -> createFolder: folderPath = isOverwrite = true; 
+2: Excel_MS -> OpenSpreadsheet: excelSourceOption = desktopfilepath; filePath = dir/CertificateData.xlsx; containsHeader = true; isSpecificSheet = false; fileAccessMode = EDIT; isSecure = false; loadAddIns = false; excludeHiddenSheets = false; containsChart = false; 
+3: Loop -> loop.commands.start: 
+4: File -> copyFiles: sourceFilePath = dir/TemplateCertificateofAppreciation.docx; destinationPath = isOverwrite = true; isParallel = false; isSize = false; isDate = false; 
+5: If -> if: 
+6: MSWordPackage -> ReplaceText: filePath = replaceText = Title; newText = Mr; 
+7: If -> elseIf: 
+8: MSWordPackage -> ReplaceText: filePath = replaceText = Title; newText = Ms; variable = operator = EQ; value = F; matchCase = true; isIgnoreCarriage = false; String -> : variable = operator = EQ; value = M; matchCase = true; isIgnoreCarriage = false; String -> : 
+9: MSWordPackage -> ReplaceText: filePath = replaceText = FirstName; newText = 
+10: String -> assign: sourceString = 
+11: MSWordPackage -> ReplaceText: filePath = replaceText = LastName; newText = 
+12: Datetime -> toString: source = selectPattern = CUSTOM; patternInput = dd/MM/yyyy; 
+13: String -> subString: sourceString = startIndex = 1; subStringLength = 2; returnBlankIfRangeNotFound = false; 
+14: String -> subString: sourceString = startIndex = 4; subStringLength = 2; returnBlankIfRangeNotFound = false; 
+15: String -> subString: sourceString = startIndex = 7; subStringLength = 4; returnBlankIfRangeNotFound = false; 
+16: MSWordPackage -> ReplaceText: filePath = replaceText = DD; newText = 
+17: MSWordPackage -> ReplaceText: filePath = replaceText = MM; newText = 
+18: MSWordPackage -> ReplaceText: filePath = replaceText = YYYY; newText = 
+19: MSWordPackage -> ReplaceText: filePath = replaceText = CompanyName; newText = 
+20: MessageBox -> messageBox: title = Automation Anywhere Enterprise Client; content = scrollLines = 30; closeMsgBox = false; 
+21: File -> renameFiles: filePath = newFileName = isSize = false; isDate = false; 
+22: FileConversion -> DOCXtoPDF: inputFile = outputPath = ; loopType = ITERATOR; iterator = Emp; loopSelection = ALL_ROWS; readOption = READ_CELL_TEXT; session = e"; Session1; Excel_MS -> : 
+23: Excel_MS -> GetMultipleCells: loopSelection = ALL_ROWS; readOption = READ_CELL_TEXT; session = e"; Session1; 
+24: Excel_MS -> CloseSpreadsheet: isSave = false; session = e"; Session1; 
+25: Loop -> loop.commands.start: 
+26: Number -> toString: input = numFormatDigits = 0; 
+27: FileConversion -> DOCXtoPDF: inputFile = outputPath = ; 
+28: PDF -> splitDocument: filePath = splitDocumentOptions = SELECTED_PAGES; selectedPages = 1; outputDirectory = filePrefix = page1; overwriteFile = true; 
+29: File -> deleteFiles: filePath = isSize = false; isDate = false; 
+30: FileConversion -> PDFtoDOCX: inputFile = outputPath = ; 
+31: File -> renameFiles: filePath = newFileName = isSize = false; isDate = false; 
+32: Number -> increment: source = by = 1; 
+33: MessageBox -> messageBox: title = Automation Anywhere Enterprise Client; content = scrollLines = 30; closeMsgBox = false; loopType = ITERATOR; iterator = Fil; folderPath = File -> : 
+34: Folder -> createFolder: folderPath = isOverwrite = true; 
+35: Number -> assignToNumber: input = 0; 
+36: Loop -> loop.commands.start: 
+37: If -> if: 
+38: FileConversion -> DOCXtoPDF: inputFile = outputPath = 
+39: PDF -> splitDocument: filePath = splitDocumentOptions = SELECTED_PAGES; selectedPages = 2; outputDirectory = filePrefix = overwriteFile = true; 
+40: MessageBox -> messageBox: title = Automation Anywhere Enterprise Client; content = scrollLines = 30; closeMsgBox = false; 
+41: FileConversion -> PDFtoDOCX: inputFile = outputPath = ; 
+42: File -> renameFiles: filePath = newFileName = isSize = false; isDate = false; 
+43: File -> deleteFiles: filePath = isSize = false; isDate = false; 
+44: File -> deleteFiles: filePath = isSize = false; isDate = false; 
+45: Email -> SendMailV2: toAddress = cc = ; bcc = ; invalidAddress = true; subject = You are awesome!; fileList = {"ty; 
+46: Number -> increment: source = by = 1; variable = operator = EQ; value = docx; matchCase = true; isIgnoreCarriage = false; String -> : loopType = ITERATOR; iterator = Fil; folderPath = File -> : 
